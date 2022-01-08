@@ -1,4 +1,145 @@
 # Appliances-energy-prediction
-Research was carried out to study Ensemble methods, KNN Regression,Support Vector Machine,Linear Regression that can be used for prediction and their accuracy were compared. This research concludes that accuracy obtained by Extra tree regressor was highest, further it was inferred that it can be made efficient by combination of different techniques and parameter tuning.
-We are given a dataset having 19735 rows and 29 columns.A lot of work has been carried out to predict appliance energy usage with the help of this dataset.
-We study various different Machine Learning algorithms that can be used for prediction of energy usage.
+
+# Introduction:
+
+In this time of global uncertainty world needs energy and in increasing quantities to support economic and social progress and build a better quality of life, in particular in developing countries. But even in today’s time there are many places especially in developing world where there are outages. These outages are primary because of excess load consumed by appliances at home. Heating and cooling appliances takes most power in house. In this project we will be analysing the appliance usage in the house gathered via home sensors. All readings are taken at 10 mins intervals for 4.5 months . The goal is to predict energy consumption by appliances . In the age of smart homes, ability to predict energy consumption can not only save money for end user but can also help in generating money for user by giving excess energy back to Grid (in case of solar panels usage). In this case regression analysis will be used to predict Appliance energy usage based on data collected from various sensors.
+
+# Problem Statement:
+
+We should predict Appliance energy consumption for a house based on factors like temperature, humidity & pressure . In order to achieve this, we need to develop a supervised learning model using regression algorithms. Regression algorithms are used as data consist of continuous features and there are no identification of appliances in dataset
+
+# Attribute information:
+
+ate time year-month-day hour:minute:second
+
+Appliances, energy use in Wh (Dependent variable)
+
+lights, energy use of light fixtures in the house in Wh (Drop this column)
+
+T1, Temperature in kitchen area, in Celsius
+
+RH1, Humidity in kitchen area, in %
+
+T2, Temperature in living room area, in Celsius
+
+RH2,Humidity in living room area, in %
+
+T3, Temperature in laundry room area
+
+RH3, Humidity in laundry room area, in %
+
+T4, Temperature in office room, in Celsius
+
+RH4,Humidity in office room, in %
+
+T5, Temperature in bathroom, in Celsius
+
+RH5, Humidity in bathroom, in %
+
+T6, Temperature outside the building (north side), in Celsius
+
+RH6, Humidity outside the building (north side), in %
+
+T7, Temperature in ironing room , in Celsius
+
+RH7, Humidity in ironing room, in %
+
+T8, Temperature in teenager room 2, in Celsius
+
+RH8,Humidity in teenager room 2, in %
+
+T9, Temperature in parents room, in Celsius
+
+RH9, Humidity in parents room, in %
+
+To, Temperature outside (from Chievres weather station), in Celsius
+
+Pressure (from Chievres weather station), in mm Hg
+
+RHout, Humidity outside (from Chievres weather station), in %
+
+Wind speed (from Chievres weather station), in m/s
+
+Visibility (from Chievres weather station), in km
+
+Tdewpoint (from Chievres weather station), Â°C
+
+rv1, Random variable 1, nondimensional
+
+rv2, Random variable 2, nondimensional
+
+# Data exploration:
+
+Number of instances: 19,735 Number of attributes: 29
+
+No NaN Values found. No Duplicates found. As maximum value in lights attribute is 0, it wont be playing much role in our model. Hence we are dropping the lights attribute from our dataset.
+
+Renamed Temperature and Humidity Features Accordingly using dictionary as below:
+
+temp = { 'T1' : 'kitchen_temp', 'T2' : 'living_temp', 'T3' : 'laundry_temp', 'T4' : 'office_temp', 'T5' : 'bath_temp', 'T6' : 'outside_temp', 'T7' : 'ironing_temp', 'T8' : 'teen_temp', 'T9' : 'parents_temp', 'T_out' : 'station_temp' }
+
+humid = { 'RH_1' : 'kitchen_humid', 'RH_2' : 'living_humid', 'RH_3' : 'laundry_humid', 'RH_4' : 'office_humid', 'RH_5' : 'bath_humid', 'RH_6' : 'outside_humid', 'RH_7' : 'ironing_humid', 'RH_8' : 'teen_humid', 'RH_9' : 'parents_humid', 'RH_out' : 'station_humid' }
+
+# Insights from data visualization:
+
+Observations⚡:
+
+Average energy consumption of appliances at different time of the day over a period of 4.5 months, we observe two peak hours. One at 11 am in the morning and other at 6 PM in the evening. While the peak at 11 am is shallow and low, peak at 6 PM is comparatively higher and sharper.
+
+We observe that over the sleeping hours (10 PM - 6 AM) the energy consumption of appliances is around 50 Wh. After about 6 AM, energy consumption starts to rise gradually up until 11 AM (probably due to morning chores). And then gradually decreases to around 100 Wh at about 3 PM. After which the energy consumption drastically shoots up up until 6 PM in the evening (probably due to requirement lights in rooms). However energy consumption of appliances reverts back to 50 Wh, as night approaches and people in the house go to bed at around 10 PM.
+
+Insights ⚡: We observe that the energy consumption of appliances during the 8 AM - 4 PM is higher in weekends compared to the weekdays. Also, average overall consumption in weekends is pretty high.
+
+Insights⚡:
+
+90% of Appliance consumption is less than 200 Wh .
+
+This column is postively skewed , most the values are around mean 100 Wh .
+
+There will be outliers in this column.
+
+There are small number of cases where consumption is very high.
+
+Observations⚡:
+
+Outside Average temperature over a period of 4.5 months is around 7.5 degrees and ranges from -6(min) to 28(max) degrees.
+
+Inside the building avarage temperature has been around 20 degrees for all the rooms and ranges from 14(min) to 30(max) degrees.
+
+Note: These points implies that warming appliances have been used to keep the insides of the building warm. There must be some sort of direct correlation b/w temperature and consumption of energy inside the house.
+
+Observations⚡:
+
+Outside the building average temp > average humidity inside the house.
+
+Average humidity at the weather station > outside humidity near the building.
+
+Average humidity in the bathroom > other rooms due to obvious reasons.
+
+Kids and parent room show a comparatively higher average humidity.
+
+OBSERVATIONS⚡:
+
+From the correlation graph we clearly observe that the features related to temperature and features related to humidity have positive correlation within themselves whereas have a a very low or negative correlation with each other.
+
+Humidity outside have a strong negative correlation with temperature levels.
+
+Apart from that we observe that a couple features such as humidity at station, temperature outside the building and temperature in the living room have a comparatively high absolute correlation (above 0.12) with Appliances energy consumption.
+
+# Model performance:
+
+![aep1](https://user-images.githubusercontent.com/88664177/148631133-353e7d80-903f-482d-8ab9-d2197a54a219.png)
+
+# Conclusion:
+
+● Dataset doesn’t have any null values.
+
+● We have observed very less co-relation between the target and feature variables.
+
+● Dropped features like rv1 & rv2 as it has infinity VIF.
+
+● Top 2 models were Extra Tree Regressor & Random Forest.
+
+● Worked on Multi-Collinearity, but not much significant effect on the dataset.
+
+● Tree based models are the best ones while dealing with features which has very less correlation with the target variable.
